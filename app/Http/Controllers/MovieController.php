@@ -18,6 +18,7 @@ class MovieController extends Controller
         return view('movies.create');
     }
 
+    //TODO: FORM request
     public function store(Request $request)
     {
         $validatedData = $request->validate([

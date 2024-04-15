@@ -2,6 +2,6 @@
 <p>{{ $movie->description }}</p>
 
 @if ($movie->image)
-    <img src="{{ asset('public/storage/' . $movie->image) }}" alt="{{ $movie->title }}">
+    <img src="{{ asset($movie->image) }}" alt="{{ $movie->title }}">
 @endif
 
