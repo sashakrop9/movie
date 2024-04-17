@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Http\Resources\MovieResource;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,13 +31,27 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'release_date' => 'required|date',
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $movie = Movie::create($validatedData);
+        $user = Auth::user(); // Получаем текущего аутентифицированного пользователя
+
+        $movie = new Movie();
+        $movie->title = $request->title;
+        $movie->description = $request->description;
+        $movie->user_id = $user->id; // Связываем фильм с пользователем
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/images', $imageName);
+            $movie->image = 'storage/images/' . $imageName;
+        }
+
+        $movie->save();
 
         return new MovieResource($movie);
     }
