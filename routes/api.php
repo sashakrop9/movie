@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 // Маршруты для аутентификации
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/movies', [MovieController::class, 'store']);
     Route::put('/movies/{id}', [MovieController::class, 'update']);
     Route::delete('/movies/{id}', [MovieController::class, 'destroy']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'profile']);

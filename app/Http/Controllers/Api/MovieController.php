@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CreateMovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Http\Resources\MovieResource;
@@ -29,21 +30,16 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateMovieRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         $user = Auth::user(); // Получаем текущего аутентифицированного пользователя
 
         $movie = new Movie();
         $movie->title = $request->title;
         $movie->description = $request->description;
-        $movie->user_name = $user->name; // Связываем фильм с именем пользователем
-        $movie->user_id = $user->id;
+        $movie->user_id = $user->id; // Связываем фильм с id пользователя
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -86,6 +82,18 @@ class MovieController extends Controller
         $movie->delete();
 
         return response()->json(['message' => 'Movie deleted successfully']);
+    }
+
+    public function moviesByUser($userId)
+    {
+        // Найти пользователя по ID
+        $user = User::findOrFail($userId);
+
+        // Получить фильмы этого пользователя
+        $movies = $user->movies;
+
+        // Вернуть фильмы в виде JSON-ответа
+        return response()->json($movies);
     }
 
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CreateLoginRequest;
+use App\Http\Requests\CreateRegisterRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -10,13 +12,9 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(CreateRegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6',
-        ]);
+        $validatedData = $request->validated();
 
         $user = User::create([
             'name' => $request->name,
@@ -27,12 +25,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'User registered successfully', 'user' => $user]);
     }
 
-    public function login(Request $request)
+    public function login(CreateLoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        $validatedData = $request->validated();
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
