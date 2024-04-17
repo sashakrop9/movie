@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/movies', [MovieController::class, 'store']);
     Route::put('/movies/{id}', [MovieController::class, 'update']);
     Route::delete('/movies/{id}', [MovieController::class, 'destroy']);
+    Route::get('/movies/user/{userId}', [MovieController::class, 'getAllMoviesByUserId']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 

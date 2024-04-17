@@ -6,7 +6,7 @@ use App\Models\User;
 
 class MovieService
 {
-    public function getMoviesByUser($userId)
+    public function getAllMoviesByUserId($userId)
     {
         $user = User::findOrFail($userId);
         return $user->movies;

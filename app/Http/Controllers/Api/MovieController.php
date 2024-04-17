@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\CreateMovieRequest;
+use App\Http\Services\MovieService;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Http\Resources\MovieResource;
@@ -11,9 +12,19 @@ use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
-    public function __construct()
+    private MovieService $movieService;
+
+    public function __construct(MovieService $movieService)
     {
         $this->middleware('auth:sanctum');
+        $this->movieService = $movieService;
+    }
+
+    public function getAllMoviesByUserId($userId)
+    {
+        $movies = $this->movieService->getAllMoviesByUserId($userId);
+
+        return response()->json($movies);
     }
 
     /**
