@@ -34,7 +34,7 @@ class MovieController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = Auth::user(); // Получаем текущего аутентифицированного пользователя
@@ -42,7 +42,7 @@ class MovieController extends Controller
         $movie = new Movie();
         $movie->title = $request->title;
         $movie->description = $request->description;
-        $movie->user_id = $user->id; // Связываем фильм с пользователем
+        $movie->user_name = $user->name; // Связываем фильм с пользователем
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');

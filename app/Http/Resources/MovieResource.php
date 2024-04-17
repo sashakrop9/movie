@@ -18,7 +18,7 @@ class MovieResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'added_by' => $this->user->name,
+            'user_name' => $this->user_name,
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\AuthController;
@@ -17,4 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/movies/{id}', [MovieController::class, 'update']);
     Route::delete('/movies/{id}', [MovieController::class, 'destroy']);
 });
+
+Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'profile']);
 
