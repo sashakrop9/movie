@@ -42,7 +42,8 @@ class MovieController extends Controller
         $movie = new Movie();
         $movie->title = $request->title;
         $movie->description = $request->description;
-        $movie->user_name = $user->name; // Связываем фильм с пользователем
+        $movie->user_name = $user->name; // Связываем фильм с именем пользователем
+        $movie->user_id = $user->id;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -50,6 +51,10 @@ class MovieController extends Controller
             $image->storeAs('public/images', $imageName);
             $movie->image = 'storage/images/' . $imageName;
         }
+
+        //привязка фильма к пользователю
+
+        $user->movies()->save($movie);
 
         $movie->save();
 
