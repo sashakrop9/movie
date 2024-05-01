@@ -2,13 +2,31 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateMovieRequest;
+use App\Http\Services\MovieService;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Http\Resources\MovieResource;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
+    private MovieService $movieService;
+
+    public function __construct(MovieService $movieService)
+    {
+        $this->middleware('auth:sanctum');
+        $this->movieService = $movieService;
+    }
+
+    public function getAllMoviesByUserId($userId)
+    {
+        $movies = $this->movieService->getAllMoviesByUserId($userId);
+
+        return MovieResource::collection($movies);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -23,15 +41,29 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateMovieRequest $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'release_date' => 'required|date',
-        ]);
+        $validatedData = $request->validated();
 
-        $movie = Movie::create($validatedData);
+        $user = Auth::user(); // Получаем текущего аутентифицированного пользователя
+
+        $movie = new Movie();
+        $movie->title = $request->title;
+        $movie->description = $request->description;
+        $movie->user_id = $user->id; // Связываем фильм с id пользователя
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/images', $imageName);
+            $movie->image = 'storage/images/' . $imageName;
+        }
+
+        //привязка фильма к пользователю
+
+        $user->movies()->save($movie);
+
+        $movie->save();
 
         return new MovieResource($movie);
     }
@@ -62,5 +94,6 @@ class MovieController extends Controller
 
         return response()->json(['message' => 'Movie deleted successfully']);
     }
+
 
 }
