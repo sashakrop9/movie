@@ -24,7 +24,7 @@ class MovieController extends Controller
     {
         $movies = $this->movieService->getAllMoviesByUserId($userId);
 
-        return response()->json($movies);
+        return MovieResource::collection($movies);
     }
 
     /**

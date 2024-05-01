@@ -18,8 +18,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/movies/{id}', [MovieController::class, 'update']);
     Route::delete('/movies/{id}', [MovieController::class, 'destroy']);
     Route::get('/movies/user/{userId}', [MovieController::class, 'getAllMoviesByUserId']);
+
+
+    Route::get('/user', [UserController::class, 'profile']);
+    Route::get('/users', [UserController::class, 'users']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
 });
 
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'profile']);
+
 
