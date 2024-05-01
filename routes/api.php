@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Route;
 
 // Маршруты для аутентификации
 Route::post('/register', [AuthController::class, 'register']);

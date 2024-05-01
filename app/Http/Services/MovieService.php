@@ -2,13 +2,19 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
+use App\Repositories\MovieRepository;
 
 class MovieService
 {
+    protected $movieRepository;
+
+    public function __construct(MovieRepository $movieRepository)
+    {
+        $this->movieRepository = $movieRepository;
+    }
+
     public function getAllMoviesByUserId($userId)
     {
-        $user = User::findOrFail($userId);
-        return $user->movies;
+        return $this->movieRepository->getAllMoviesByUserId($userId);
     }
 }

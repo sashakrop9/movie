@@ -95,16 +95,5 @@ class MovieController extends Controller
         return response()->json(['message' => 'Movie deleted successfully']);
     }
 
-    public function moviesByUser($userId)
-    {
-        // Найти пользователя по ID
-        $user = User::findOrFail($userId);
-
-        // Получить фильмы этого пользователя
-        $movies = $user->movies;
-
-        // Вернуть фильмы в виде JSON-ответа
-        return response()->json($movies);
-    }
 
 }
